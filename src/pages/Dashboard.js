@@ -1,29 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState } from "react";
+import TransactionForm from "../components/TransactionForm";
 
-function Dashboard() {
+const Dashboard = () => {
   const [transactions, setTransactions] = useState([]);
 
-  useEffect(() => {
-    const fetchTransactions = async () => {
-      const res = await axios.get('/api/transactions');
-      setTransactions(res.data);
-    };
-    fetchTransactions();
-  }, []);
+  const addTransaction = (transaction) => {
+    setTransactions([...transactions, { ...transaction, id: Date.now() }]);
+  };
 
   return (
-    <div>
-      <h1>Dashboard</h1>
-      <ul>
+    <div className="p-4">
+      <h2 className="text-xl font-bold mb-4">Dashboard</h2>
+      <TransactionForm addTransaction={addTransaction} />
+      <ul className="mt-4">
         {transactions.map((t) => (
-          <li key={t._id}>
-            {t.type}: {t.category} - ${t.amount}
+          <li key={t.id} className="p-2 border-b">
+            {t.title} - {t.amount} ({t.type})
           </li>
         ))}
       </ul>
     </div>
   );
-}
+};
 
 export default Dashboard;
